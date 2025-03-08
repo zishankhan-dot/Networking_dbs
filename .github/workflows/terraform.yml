@@ -14,7 +14,11 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set Working Directory
-      run: ls -l && pwd  
+      run: |
+          echo "Current directory:"
+          pwd
+          echo "Files in the current directory:"
+          ls -l  
 
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v3
@@ -23,7 +27,7 @@ jobs:
 
     - name: Initialize Terraform
       run: terraform init
-      working-directory: /terraform
+      working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs
 
     - name: Plan Terraform Deployment
       run: terraform plan
