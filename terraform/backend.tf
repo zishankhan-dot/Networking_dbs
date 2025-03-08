@@ -1,7 +1,7 @@
 terraform {
   backend "azurerm" {
-    storage_account_name = "${var.name}-storage"
-    container_name = "${var.name}-container"
+    storage_account_name = "$sample-storage"
+    container_name = "$sample-container"
     key = "terraform.tfstate"
   }
 }
