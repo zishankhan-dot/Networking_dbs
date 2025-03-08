@@ -42,4 +42,4 @@ jobs:
 
     - name: Apply Terraform Configuration
       run: terraform apply -auto-approve
-      working-directory: /networking/Networking_dbs/Networking_dbs/terraform
+      working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform
