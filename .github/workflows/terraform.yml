@@ -23,7 +23,7 @@ jobs:
 
     - name: Initialize Terraform
       run: terraform init
-      working-directory: networking_dbs/terraform
+      working-directory: /terraform
 
     - name: Plan Terraform Deployment
       run: terraform plan
