@@ -31,7 +31,7 @@ jobs:
     - name: Restore Terraform State from Cache
       uses: actions/cache@v3
       with:
-          path: terraform.tfstate
+          path: ./state-files/terraform.tfstate
           key: terraform-state-${{ github.run_id }}
           restore-keys: terraform-state-
 
@@ -43,10 +43,11 @@ jobs:
     - name: Initialize Terraform
       run: terraform init
       working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform
+    
     - name: Plan Terraform Deployment
-      run: terraform plan
+      run: terraform plan -out=myplan.out
       working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform
 
     - name: Apply Terraform Configuration
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve -state=./state-files/terraform.tfstate
       working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform
