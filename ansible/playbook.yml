@@ -1,0 +1,66 @@
+---
+- name: configure azure_vm for apache inside docker
+  hosts: Webserver
+  become: true 
+  remote_user: adminuser 
+  tasks: 
+        
+        - name: updating ubuntu
+          apt:
+            update_cache : yes
+            upgrade: yes
+        
+        - name: install docker 
+          apt:    
+                name: docker.io
+                state: present
+            
+        
+        - name: start and enable docker 
+          systemd:    
+                name: docker
+                enabled: yes
+                state: started 
+
+        
+        - name: add user to docker group 
+          user:    
+                name: adminuser
+                groups: docker
+                append: yes
+
+        
+        - name: pull apache image  
+          docker_image:    
+                name: httpd
+                source:  pull 
+
+            
+        - name: Create website directory
+          file:
+                path: /home/adminuser/website
+                state: directory
+                owner: adminuser
+                group: adminuser
+                mode: "0755"
+
+        - name: Copy website files to the server
+          copy:
+            src: ../webpage/index.html
+            dest: /home/adminuser/website/index.html
+
+        - name: Run Apache container
+          docker_container:
+            name: my-apache
+            image: httpd
+            state: started
+            restart_policy: always
+            ports:
+            - "80:80"
+            volumes:
+            - "/home/adminuser/website:/usr/local/apache2/htdocs"
+                
+
+            
+
+            

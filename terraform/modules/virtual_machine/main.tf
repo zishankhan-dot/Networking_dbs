@@ -4,13 +4,13 @@
 and inbound-http(80) for deployment of webapi */
 
 resource "azurerm_resource_group" "rm" {
-name="${var.name}-resource"
+name="${var.name}-resource"                     ## Resource-group
 location="${var.location}"
 }
 
 resource "azurerm_virtual_network" "vn" {
   name = "${var.name}-network"
-  address_space = ["10.0.0.0/16"]
+  address_space = ["10.0.0.0/16"]               ##Virtual Network
   resource_group_name = azurerm_resource_group.rm.name
   location = azurerm_resource_group.rm.location
 }
@@ -19,20 +19,20 @@ resource "azurerm_virtual_network" "vn" {
 resource "azurerm_subnet" "sbnet-internal" {
     resource_group_name = azurerm_resource_group.rm.name
     name = "${var.name}-sbnet-internal"
-    address_prefixes = ["10.0.1.0/24"]
+    address_prefixes = ["10.0.1.0/24"]        ##Subnet 
     virtual_network_name = azurerm_virtual_network.vn.name
 }
 # subnet for public ip 
 resource "azurerm_subnet" "sbnet-external" {
     resource_group_name = azurerm_resource_group.rm.name
-    name = "${var.name}-sbnet-external"
+    name = "${var.name}-sbnet-external"      ##Subnet
     address_prefixes = ["10.0.2.0/24"]
     virtual_network_name = azurerm_virtual_network.vn.name
 }
 
 resource "azurerm_public_ip" "pip" {
     name = "${var.name}-pip"
-    location = azurerm_resource_group.rm.location
+    location = azurerm_resource_group.rm.location       ##publicIp
     resource_group_name = azurerm_resource_group.rm.name
     allocation_method = "Static"
 }
@@ -152,4 +152,12 @@ resource "azurerm_linux_virtual_machine" "main" {
     "From"="Terraform"
     "Owner"       = "ZishanHassanKhan"
   }
+}
+
+resource "local_file" "ansible_inventory" {
+  content = <<-EOT
+  [Webserver]
+  ${azurerm_public_ip.pip.ip_address} ansible_ssh_user=adminuser ansible_ssh_private_key_file=~/.ssh/ssh_key
+  EOT
+  filename = "../ansible/inventory.ini"
 }
