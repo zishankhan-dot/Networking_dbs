@@ -1,1 +1,28 @@
+name: Terraform Azure VM Deployment
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: self-hosted 
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: latest
+
+    - name: Initialize Terraform
+      run: terraform init
+
+    - name: Plan Terraform Deployment
+      run: terraform plan
+
+    - name: Apply Terraform Configuration
+      run: terraform apply -auto-approve
