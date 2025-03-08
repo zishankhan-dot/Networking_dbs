@@ -27,12 +27,12 @@ jobs:
 
     - name: Initialize Terraform
       run: terraform init
-      working-directory: networking/Networking_dbs/Networking_dbs/terraform
+      working-directory: /networking/Networking_dbs/Networking_dbs/terraform
 
     - name: Plan Terraform Deployment
       run: terraform plan
-      working-directory: networking_dbs/terraform
+      working-directory: /networking/Networking_dbs/Networking_dbs/terraform
 
     - name: Apply Terraform Configuration
       run: terraform apply -auto-approve
-      working-directory: networking/Networking_dbs/Networking_dbs/terraform
+      working-directory: /networking/Networking_dbs/Networking_dbs/terraform
