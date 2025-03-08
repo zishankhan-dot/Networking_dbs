@@ -27,6 +27,13 @@ jobs:
           echo "New directory:"
           pwd
           ls -l
+          
+    - name: Restore Terraform State from Cache
+      uses: actions/cache@v3
+      with:
+          path: terraform.tfstate
+          key: terraform-state-${{ github.run_id }}
+          restore-keys: terraform-state-
 
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v3
