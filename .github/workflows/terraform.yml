@@ -23,7 +23,7 @@ jobs:
     - name: Change to Terraform Directory
       run: |
           echo "Changing directory to terraform"
-          cd networking_dbs/terraform
+          cd /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform
           echo "New directory:"
           pwd
           ls -l
