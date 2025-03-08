@@ -20,6 +20,14 @@ jobs:
           echo "Files in the current directory:"
           ls -l  
 
+    - name: Change to Terraform Directory
+      run: |
+          echo "Changing directory to terraform"
+          cd networking_dbs/terraform
+          echo "New directory:"
+          pwd
+          ls -l
+
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v3
       with:
