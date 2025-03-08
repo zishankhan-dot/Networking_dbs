@@ -27,11 +27,14 @@ jobs:
           echo "New directory:"
           pwd
           ls -l
+    - name: Set Terraform Directory
+      id: set-dir
+      run: echo "TERRAFORM_DIR=/mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform" >> $GITHUB_ENV
           
     - name: Restore Terraform State from Cache
       uses: actions/cache@v3
       with:
-          path: ./state-files/terraform.tfstate
+          path: ${{ env.TERRAFORM_DIR }}/terraform.tfstate
           key: terraform-state-${{ github.run_id }}
           restore-keys: terraform-state-
 
@@ -42,12 +45,18 @@ jobs:
 
     - name: Initialize Terraform
       run: terraform init
-      working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform
+      working-directory: ${{ env.TERRAFORM_DIR }}
     
     - name: Plan Terraform Deployment
       run: terraform plan -out=myplan.out
-      working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform
+      working-directory: ${{ env.TERRAFORM_DIR }}
 
     - name: Apply Terraform Configuration
-      run: terraform apply -auto-approve -state=./state-files/terraform.tfstate
-      working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform
+      run: terraform apply -auto-approve 
+      working-directory: ${{ env.TERRAFORM_DIR }}
+
+    - name: Save Terraform State to Cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.TERRAFORM_DIR }}/terraform.tfstate
+        key: terraform-state-${{ github.run_id }}
