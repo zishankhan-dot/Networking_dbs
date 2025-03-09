@@ -77,11 +77,8 @@ jobs:
       run: cat ../ansible/inventory.ini
       working-directory: ${{ env.TERRAFORM_DIR }}
 
-    - name: Output Inventory File
-      run: cat ../ansible/inventory.ini
-      working-directory: ${{ env.TERRAFORM_DIR }}
 
     - name: Run Ansible Playbook
       run: |
         ansible-playbook -i inventory.ini playbook.yml
-      working-directory: ${{ env.TERRAFORM_DIR }}./ansible
+      working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/ansible
