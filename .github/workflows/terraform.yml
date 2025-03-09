@@ -62,7 +62,7 @@ jobs:
         key: terraform-state-${{ github.run_id }}
         
     - name: Output Inventory File
-      run: cat ./ansible/inventory.ini
+      run: cat ../ansible/inventory.ini
       working-directory: ${{ env.TERRAFORM_DIR }}
       
 
