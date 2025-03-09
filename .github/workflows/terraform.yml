@@ -66,17 +66,6 @@ jobs:
       working-directory: ${{ env.TERRAFORM_DIR }}
       
 
-
-
-  
-  ansible:
-    runs-on: self-hosted
-    needs: terraform
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
     - name: Set ansible Directory
       id: set-dir
       run: echo "ANSIBLE_DIR=/mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/ansible" >> $GITHUB_ENV
