@@ -67,15 +67,29 @@ jobs:
       working-directory: ${{ env.TERRAFORM_DIR }}
       
 
-
-    - name: Install Ansible
+    - name: Setup SSH Key
       run: |
-        sudo apt-get update
-        sudo apt-get install -y ansible
+           mkdir -p ~/.ssh
+           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/ssh_key
+           chmod 600 ~/.ssh/ssh_key
+
+    - name: Disable SSH Host Key Checking
+      run: |
+        echo "Host *" > ~/.ssh/config
+        echo "   StrictHostKeyChecking no" >> ~/.ssh/config
+        echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+        - name: Install Ansible
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y ansible
 
     - name: Output Inventory File
       run: cat ../ansible/inventory.ini
       working-directory: ${{ env.TERRAFORM_DIR }}
+
+    - name: Verify SSH Key Setup
+      run: ls -la ~/.ssh
+
 
 
     - name: Run Ansible Playbook
