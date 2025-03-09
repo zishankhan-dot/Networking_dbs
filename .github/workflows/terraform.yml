@@ -67,9 +67,6 @@ jobs:
       working-directory: ${{ env.TERRAFORM_DIR }}
       
 
-    - name: Set ansible Directory
-      id: set-dir
-      run: echo "ANSIBLE_DIR=/mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/ansible" >> $GITHUB_ENV
 
     - name: Install Ansible
       run: |
@@ -81,10 +78,10 @@ jobs:
       working-directory: ${{ env.TERRAFORM_DIR }}
 
     - name: Output Inventory File
-      run: cat inventory.ini
-      working-directory: ${{ env.ANSIBLE_DIR }}
+      run: cat ../ansible/inventory.ini
+      working-directory: ${{ env.TERRAFORM_DIR }}
 
     - name: Run Ansible Playbook
       run: |
         ansible-playbook -i inventory.ini playbook.yml
-      working-directory: ${{ env.ANSIBLE_DIR }}
+      working-directory: ${{ env.TERRAFORM_DIR }}../ansible
