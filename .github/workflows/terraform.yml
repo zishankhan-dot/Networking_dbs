@@ -60,3 +60,21 @@ jobs:
       with:
         path: ${{ env.TERRAFORM_DIR }}/terraform.tfstate
         key: terraform-state-${{ github.run_id }}
+
+
+  
+  ansible:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Ansible
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ansible
+
+    - name: Run Ansible Playbook
+      run: |
+        ansible-playbook -i inventory.ini ansible/playbook.yml
