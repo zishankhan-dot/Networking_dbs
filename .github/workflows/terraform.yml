@@ -65,6 +65,7 @@ jobs:
   
   ansible:
     runs-on: self-hosted
+    needs: terraform
 
     steps:
     - name: Checkout repository
