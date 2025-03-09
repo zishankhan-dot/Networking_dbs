@@ -81,5 +81,5 @@ jobs:
 
     - name: Run Ansible Playbook
       run: |
-        ansible-playbook -i inventory.ini ansible/playbook.yml
+        ansible-playbook -i inventory.ini playbook.yml
       working-directory: ${{ env.ANSIBLE_DIR }}
