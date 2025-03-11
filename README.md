@@ -1,81 +1,84 @@
-__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-# Networking_dbs
-This is for Networking Assignment-DBS-MSC ISC  
+# README - Terraform + Ansible + GitHub Runner Automation  
 
-__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+## Overview  
+This setup automates the provisioning of an Azure infrastructure using Terraform, followed by software configuration using Ansible, and local automation with GitHub Runner.  
 
-~by ZISHAN HASSAN KHAN
+Terraform provisions:  
+- **1 Resource Group**  
+- **1 Virtual Network**  
+- **2 Subnets** (Public & Private)  
+- **1 Static Public IP**  
+- **2 Network Interfaces (NICs)**  
+- **2 Network Security Groups (NSGs)** (Associated with NICs)  
+- **1 Virtual Machine** (Ubuntu latest image)  
 
-__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Ansible is executed **after** Terraform completes to:  
+- Install **Docker**  
+- Pull the **Apache HTTP Server** image  
+- Upload `index.html` from `/webpage/`  
+- Serve the webpage using **Docker**  
 
-README: Automation Workflow for Ansible Playbook and Terraform
-__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-Purpose
-This automation workflow provisions a virtual machine (VM) in Azure using Terraform and configures it as a web server running Apache inside a Docker container using an Ansible playbook.
-__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-Overview of the Workflow
+## Prerequisites  
 
+### 1. Generate SSH Key  
+Run the following command to create an SSH key pair:  
+```bash
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+```
+- Upload the **private key** to **GitHub Secrets**  
+- Copy the **public key** to `~/.ssh/` on your local system  
 
-Terraform Module:
+### 2. Upload Webpage  
+Place your `index.html` in:  
+```
+/webpage/index.html
+```
 
-Creates Azure resources: Resource Group, Virtual Network, Subnets (Public/Private), Public IP, Network Interfaces, Network Security Groups.
+### 3. Install Dependencies on Local Runner  
+Ensure the GitHub Runner has:  
+```bash
+sudo apt update && sudo apt install -y unzip nodejs
+```
 
-Deploys an Ubuntu-based Linux VM with both public and private IPs.
+## Terraform Workflow  
 
-Generates an Ansible inventory file containing the public IP for VM configuration.
+### 1. Initialize Terraform  
+```bash
+terraform init
+```
 
+### 2. Apply Terraform Configuration  
+```bash
+terraform apply -auto-approve
+```
+- This will create `instruction.ini`, which Ansible will use to SSH into the VM.  
+- Terraform state is cached in the runner by default (can be disabled in `.github/workflows/terraform` by commenting the relevant lines).  
 
-Ansible Playbook:
+### 3. Terraform Output  
+Terraform outputs are stored in `output.tf` and include:  
+- **Public IP** of the VM  
+- **Resource group & networking details**  
 
-Connects to the VM via SSH (using the public IP and a private SSH key).
+## Ansible Workflow  
+Once Terraform completes, run:  
+```bash
+ansible-playbook -i instruction.ini playbook.yml
+```
+This will:  
+- SSH into the VM  
+- Install Docker  
+- Pull the **Apache HTTP Server** image  
+- Deploy `index.html` from `/webpage/`  
 
-Updates the operating system, installs Docker, and deploys an Apache web server inside a Docker container.
+## Notes  
+- The `main.tf` file also generates `instruction.ini` dynamically.  
+- Ensure **Ansible** is installed on your local system.  
+- If the Terraform state should **not** be cached, modify `.github/workflows/terraform`.  
 
-Copies a sample website to the Apache server.
+## Cleanup  
+To destroy resources:  
+```bash
+terraform destroy -auto-approve
+```  
 
-Terraform Steps
-Resource Group Creation:
-
-Creates a new Azure Resource Group for organizing resources.
-
-Networking:
-
-Configures a Virtual Network with public and private subnets.
-
-Associates subnets with appropriate Network Security Groups (NSGs) for controlling traffic.
-
-VM Deployment:
-
-Provisions a Linux VM with SSH key-based authentication.
-
-Attaches the public and private network interfaces.
-
-Ansible Inventory File:
-
-Outputs a dynamically generated inventory file pointing to the public IP of the VM.
-
-Ansible Steps
-Update and Prepare Environment:
-
-Updates Ubuntu packages.
-
-Installs and configures Docker.
-
-Apache Web Server Deployment:
-
-Pulls the Apache Docker image from Docker Hub.
-
-Deploys the container with port mapping (80:80).
-
-Website Hosting:
-
-Copies website files from the host to the container.
-
-Usage Instructions
-Run terraform init and terraform apply to provision Azure infrastructure.
-
-Navigate to the ansible directory and execute the playbook:
-
-bash
-ansible-playbook -i inventory.ini playbook.yml
-Access the deployed website using the public IP.
+This setup ensures seamless provisioning, configuration, and hosting of a static website using Terraform, Ansible, and GitHub Runner.
