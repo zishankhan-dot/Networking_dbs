@@ -24,13 +24,13 @@ jobs:
     - name: Change to Terraform Directory
       run: |
           echo "Changing directory to terraform"
-          cd /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform
+          cd /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/_work/Networking_dbs/Networking_dbs/terraform
           echo "New directory:"
           pwd
           ls -l
     - name: Set Terraform Directory
       id: set-dir
-      run: echo "TERRAFORM_DIR=/mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/terraform" >> $GITHUB_ENV
+      run: echo "TERRAFORM_DIR=/mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/_work/Networking_dbs/Networking_dbs/terraform" >> $GITHUB_ENV
           
     - name: Restore Terraform State from Cache
       uses: actions/cache@v3
@@ -96,4 +96,4 @@ jobs:
     - name: Run Ansible Playbook
       run: |
         ansible-playbook -i inventory.ini playbook.yml
-      working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/networking/Networking_dbs/Networking_dbs/ansible
+      working-directory: /mnt/c/Users/Dell/Documents/webDev/networking_dbs/actions-runner/_work/Networking_dbs/Networking_dbs/ansible
