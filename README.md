@@ -82,3 +82,7 @@ terraform destroy -auto-approve
 ```  
 
 This setup ensures seamless provisioning, configuration, and hosting of a static website using Terraform, Ansible, and GitHub Runner.
+
+
+
+testRUN-1
